@@ -1,0 +1,8 @@
+{
+    "test" : "starting test",
+    "general":{
+        "login" : "Login",
+        "register" : "Sign up",
+        "logout" : "Logout"
+    }
+}
