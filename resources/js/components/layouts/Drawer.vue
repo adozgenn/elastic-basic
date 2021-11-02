@@ -52,6 +52,14 @@
                         class="d-flex"
                 >
                     <v-btn
+                            @click="reset"
+                            rounded
+                            color="error"
+                            dark
+                    >
+                        Sıfırla
+                    </v-btn>
+                    <v-btn
                             @click="goFilter"
                             rounded
                             color="primary"
@@ -59,6 +67,7 @@
                     >
                         Filtrele
                     </v-btn>
+
                 </v-col>
             </v-row>
         </v-container>
@@ -82,7 +91,21 @@ export default {
             right: null
         };
     },
+    created() {
+        this.$store.commit("SET_QUERY_PARAMS", {
+            brand: '',
+            color: '',
+            size: ''
+        })
+    },
     methods: {
+        reset(){
+            this.$store.commit("SET_QUERY_PARAMS", {
+                brand: '',
+                color: '',
+                size: ''
+            })
+        },
         goFilter(){
             this.$store.commit("SET_QUERY_PARAMS", this.queryParams)
         }

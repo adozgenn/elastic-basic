@@ -2004,6 +2004,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2031,7 +2040,21 @@ __webpack_require__.r(__webpack_exports__);
       right: null
     };
   },
+  created: function created() {
+    this.$store.commit("SET_QUERY_PARAMS", {
+      brand: '',
+      color: '',
+      size: ''
+    });
+  },
   methods: {
+    reset: function reset() {
+      this.$store.commit("SET_QUERY_PARAMS", {
+        brand: '',
+        color: '',
+        size: ''
+      });
+    },
     goFilter: function goFilter() {
       this.$store.commit("SET_QUERY_PARAMS", this.queryParams);
     }
@@ -2175,6 +2198,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2205,9 +2229,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     query_params: 'query_params'
   })),
   watch: {
-    queryParams: {
+    query_params: {
       handler: function handler() {
-        console.log("params", this.queryParams);
+        this.getProducts();
       },
       deep: true
     },
@@ -2231,7 +2255,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     createQueryParams: function createQueryParams() {
       var _this$search;
 
-      return "?search=".concat((_this$search = this.search) !== null && _this$search !== void 0 ? _this$search : '', "&sort=").concat(this.sortBy);
+      var _this$query_params = this.query_params,
+          brand = _this$query_params.brand,
+          color = _this$query_params.color,
+          size = _this$query_params.size;
+      return "?search=".concat((_this$search = this.search) !== null && _this$search !== void 0 ? _this$search : '', "&sort=").concat(this.sortBy, "&brand=").concat(brand, "&color=").concat(color, "&size=").concat(size);
     },
     getProducts: function getProducts() {
       var _this2 = this;
@@ -38822,6 +38850,15 @@ var render = function () {
                   _c(
                     "v-btn",
                     {
+                      attrs: { rounded: "", color: "error", dark: "" },
+                      on: { click: _vm.reset },
+                    },
+                    [_vm._v("\n                    Sıfırla\n                ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
                       attrs: { rounded: "", color: "primary", dark: "" },
                       on: { click: _vm.goFilter },
                     },
@@ -38966,6 +39003,7 @@ var render = function () {
     { style: { background: _vm.$vuetify.theme.themes.light.background } },
     [
       [
+        _vm._v("\n        " + _vm._s(_vm.query_params) + "\n        "),
         _c(
           "v-container",
           { attrs: { fluid: "" } },

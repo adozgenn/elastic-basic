@@ -8,24 +8,50 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     public function index(Request $request){
-        $query = [
+        $query1 = [
                 'nested'=>[
                     'path'=> 'variants',
                     'query'=>[
                         'bool'=>[
                             'should'=>[
                                 'term'=>[
-                                    "variants.color.keyword"=> "green"
+                                    "variants.color.keyword"=> $request->get('color')
                                 ]
                             ]
                         ],
                     ]
                 ]
         ];
-        $searchResult = null;
-        if ($request->has("search") && $request->get("search")){
-            $searchResult = Product::boolSearch()->should('match', ['title' => $request->get("search")]);
-        } else {
+        $query2 = [
+            'nested'=>[
+                'path'=> 'variants',
+                'query'=>[
+                    'bool'=>[
+                        'should'=>[
+                            'term'=>[
+                                "variants.size.keyword"=> $request->get('size')
+                            ]
+                        ]
+                    ],
+                ]
+            ]
+        ];
+        if ($request->get("color") || $request->get('search') || $request->get('brand') || $request->get('size')){
+            $searchResult = Product::boolSearch();
+            if ($request->has("search") && $request->get("search")){
+                $searchResult->should('match', ['title' => $request->get("search")]);
+            }
+            if ($request->has("brand") && $request->get("brand")){
+                $searchResult->must('match', ['brand.keyword' => $request->get("brand")]);
+            }
+            if ($request->has("color") && $request->get("color")){
+                $searchResult->must($query1);
+            }
+            if ($request->has("size") && $request->get("size")){
+                $searchResult->must($query2);
+            }
+        }
+        else {
             $searchResult = Product::matchAllSearch();
         }
         if ($request->has("sort") && $request->get("sort")){

@@ -1,6 +1,7 @@
 <template>
   <v-app :style="{background: $vuetify.theme.themes.light.background}">
       <template>
+          {{query_params}}
           <v-container fluid>
               <v-data-iterator
                       :items="items"
@@ -69,9 +70,9 @@
             ...mapGetters({query_params: 'query_params'}),
         },
         watch: {
-            queryParams: {
+            query_params: {
                 handler: function(){
-                    console.log("params", this.queryParams)
+                    this.getProducts();
                 },
                 deep: true
             },
@@ -91,7 +92,8 @@
         },
         methods: {
             createQueryParams(){
-                return `?search=${this.search ?? ''}&sort=${this.sortBy}`;
+                const {brand, color, size} = this.query_params;
+                return `?search=${this.search ?? ''}&sort=${this.sortBy}&brand=${brand}&color=${color}&size=${size}`;
             },
             getProducts(){
                 axios.get("/api/products"+this.createQueryParams()).then(res=>{
